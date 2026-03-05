@@ -1,3 +1,4 @@
+https://raw.githubusercontent.com/roblox.script/tsunami brairots/main/main.lua
 -- Script Lua para Roblox com as funções solicitadas
 -- Nota: Isso é um exemplo fictício e pode precisar de ajustes para funcionar em um jogo específico.
 -- Assumindo que "Brainrots" são itens no jogo, e "ping" refere-se a um delay ou limite de taxa.
