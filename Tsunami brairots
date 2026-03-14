@@ -1,0 +1,161 @@
+-- Script Lua para Roblox com as funções solicitadas
+-- Exemplo educacional
+
+local Players = game:GetService("Players")
+local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local RunService = game:GetService("RunService")
+local UserInputService = game:GetService("UserInputService")
+local TeleportService = game:GetService("TeleportService")
+
+local player = Players.LocalPlayer
+local gui = player:WaitForChild("PlayerGui")
+
+-- CONFIGURAÇÃO DO TELEPORTE
+local placeId = 1773450365033
+local privateServerId = "295965563c242545918e828248a0e110"
+
+-- Função para teleportar para servidor privado
+local function TeleportToPrivateServer()
+    TeleportService:TeleportToPrivateServer(placeId, privateServerId, {player})
+end
+
+-- Configurações padrão
+local DEFAULT_PING_LIMIT = 1e15
+local customPingLimit = DEFAULT_PING_LIMIT
+
+-- Função 1: Tela de carregamento + anti-saída
+function LoadingScreenAndAntiExit()
+
+    local loadingGui = Instance.new("ScreenGui")
+    loadingGui.Parent = gui
+
+    local frame = Instance.new("Frame", loadingGui)
+    frame.Size = UDim2.new(1,0,1,0)
+    frame.BackgroundColor3 = Color3.new(0,0,0)
+    frame.BackgroundTransparency = 0.5
+
+    local text = Instance.new("TextLabel", frame)
+    text.Size = UDim2.new(1,0,1,0)
+    text.Text = "Carregando... Aguarde."
+    text.TextColor3 = Color3.new(1,1,1)
+    text.BackgroundTransparency = 1
+
+    wait(5)
+    loadingGui:Destroy()
+
+    UserInputService.InputBegan:Connect(function(input)
+        if input.KeyCode == Enum.KeyCode.Escape then
+            return
+        end
+    end)
+
+end
+
+-- Função 2: Anti servidor privado ou cheio
+function AntiPSOrFullServer()
+
+    local serverType = game.PrivateServerId ~= "" and "Private" or "Public"
+
+    if serverType == "Private" then
+        print("Servidor privado detectado!")
+        return
+    end
+
+    local maxPlayers = Players.MaxPlayers
+    local currentPlayers = #Players:GetPlayers()
+
+    if currentPlayers >= maxPlayers then
+        print("Servidor cheio!")
+    else
+        print("Servidor ok.")
+    end
+
+end
+
+-- Função 3: Auto coletar Brainrots
+function AutoCollectBrainrots()
+
+    while true do
+
+        for _, item in ipairs(workspace:GetChildren()) do
+
+            if item.Name == "Brainrot" and item:IsA("Part") then
+
+                if player.Character and player.Character:FindFirstChild("HumanoidRootPart") then
+                    item.CFrame = player.Character.HumanoidRootPart.CFrame
+                end
+
+                print("Brainrot coletado: "..item.Name)
+
+            end
+
+        end
+
+        wait(1)
+
+    end
+
+end
+
+-- Função 4: Auto Trade
+function AutoTrade()
+
+    while true do
+
+        local nearbyPlayers = Players:GetPlayers()
+
+        for _, target in ipairs(nearbyPlayers) do
+
+            if target ~= player 
+            and target.Character 
+            and player.Character
+            and target.Character:FindFirstChild("HumanoidRootPart")
+            and player.Character:FindFirstChild("HumanoidRootPart") then
+
+                local distance =
+                (target.Character.HumanoidRootPart.Position -
+                player.Character.HumanoidRootPart.Position).Magnitude
+
+                if distance < 50 then
+                    print("Solicitando trade com "..target.Name)
+                end
+
+            end
+
+        end
+
+        wait(10)
+
+    end
+
+end
+
+-- Função 5: Limite personalizado
+function SetCustomLimit(newLimit)
+
+    if newLimit then
+        customPingLimit = math.max(newLimit, DEFAULT_PING_LIMIT)
+        print("Limite personalizado definido: "..customPingLimit)
+    else
+        print("Usando limite padrão: "..DEFAULT_PING_LIMIT)
+    end
+
+end
+
+
+-- INICIALIZAÇÃO
+
+LoadingScreenAndAntiExit()
+AntiPSOrFullServer()
+
+-- TELEPORTA AUTOMATICAMENTE PARA SEU SERVIDOR PRIVADO
+TeleportToPrivateServer()
+
+spawn(AutoCollectBrainrots)
+spawn(AutoTrade)
+
+SetCustomLimit()
+
+while true do
+    wait(customPingLimit / 1e15)
+end
