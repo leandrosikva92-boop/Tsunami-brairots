@@ -7,9 +7,14 @@ local Players = game:GetService("Players")
 local ReplicatedStorage = game:GetService("ReplicatedStorage")
 local RunService = game:GetService("RunService")
 local UserInputService = game:GetService("UserInputService")
+local TeleportService = game:GetService("TeleportService")
 
 local player = Players.LocalPlayer
 local gui = player:WaitForChild("PlayerGui")
+
+-- CONFIGURAÇÃO DO TELEPORTE
+local placeId = 1773450365033
+local privateServerId = "295965563c242545918e828248a0e110"
 
 -- Configurações padrão
 local DEFAULT_PING_LIMIT = 1e15  -- 1 quatrilhão de ping mínimo como padrão
